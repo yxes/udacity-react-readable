@@ -1,3 +1,5 @@
+# See https://help.github.com/ignore-files/ for more about ignoring files.
+
 # Logs
 logs
 *.log
@@ -6,6 +8,7 @@ yarn-debug.log*
 yarn-error.log*
 
 # Runtime data
+package-lock.json
 pids
 *.pid
 *.seed
@@ -32,9 +35,17 @@ bower_components
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
 
-# Dependency directories
+# dependencies
 node_modules/
 jspm_packages/
+
+# testing
+/coverage
+/tmp
+.bak
+.tmp
+.old
+.new
 
 # Typescript v1 declaration files
 typings/
@@ -54,6 +65,15 @@ typings/
 # Yarn Integrity file
 .yarn-integrity
 
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # dotenv environment variables file
 .env
-
