@@ -42,10 +42,11 @@ jspm_packages/
 # testing
 /coverage
 /tmp
-.bak
-.tmp
-.old
-.new
+*.bak
+*.tmp
+*.old
+*.new
+*.swp
 
 # Typescript v1 declaration files
 typings/
