@@ -4,35 +4,35 @@ body {
   font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif;
 }
 
-.categories {
-  text-align: left;
-  width: 150px;
-  height: 600px;
-  background-color: black;
+.app-header {
+  background-image: url("/src/icons/books.jpg");
+  background-color: #ccc;
+  padding: 20px;
+  margin: 10px;
 }
 
-.categories h3 {
-  text-align: center;
-}
-
-.categories ul {
-  list-style-type: none;
-}
-
-.App {
-  text-align: center;
-}
-
-.App-logo {
+.app-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
+.post {
+  width: auto;
+  background-color: lightgrey;
   padding: 20px;
-  color: white;
+  margin: 10px;
+}
+
+.categories {
+  padding: 20px;
+  margin: 10px;
+}
+
+
+
+
+.App {
+  text-align: center;
 }
 
 .App-title {
@@ -42,11 +42,6 @@ body {
 .posts {
   margin-left: 200px;
   width: 600px;
-}
-
-.post {
-  width: auto;
-  background-color: lightgrey;
 }
 
 @keyframes App-logo-spin {

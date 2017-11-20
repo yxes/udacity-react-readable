@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 
 import {
+  ADD_CATEGORY,
+
   ADD_POST,
   EDIT_POST,
   DEL_POST,
@@ -8,24 +10,31 @@ import {
   ADD_COMMENT,
   EDIT_COMMENT,
   DEL_COMMENT,
+  DEL_COMMENT_PARENT,
 
-  INC_VOTE_SCORE,
-  DEC_VOTE_SCORE
+  INC_POST,
+  DEC_POST,
+
+  INC_COMMENT,
+  DEC_COMMENT
 } from '../actions'
 
 
-const initialPostState = {}
-//  { id: null,
-//    timestamp: null,
-//    title: null,
-//    body: null,
-//    author: null,
-//    category: null,
-//    voteScore: 0,
-//    deleted: false }
+function categories (state = [], action) {
+  const { name, path } = action
 
-function posts (state = initialPostState, action) {
-  const { id, timestamp, title, body, author, category, voteScore, deleted } = action
+  switch (action.type) {
+    case ADD_CATEGORY:
+      return state
+	      .concat({ name, path })
+	      .sort( (a, b) => a.name < b.name ? -1 : 1)
+    default:
+      return state
+  }
+}
+
+function posts (state = {}, action) {
+  const { id, title, body, author, category, timestamp, voteScore, deleted } = action
 
   switch (action.type) {
     case ADD_POST:
@@ -33,13 +42,13 @@ function posts (state = initialPostState, action) {
 	...state,
         [id]: {
 	  ...state[id],
-          timestamp,
+          timestamp: timestamp === undefined ? Date.now() : timestamp,
 	  title,
 	  body,
 	  author,
 	  category,
-	  voteScore,
-	  deleted
+	  voteScore: voteScore === undefined ? 1 : voteScore,
+	  deleted: deleted === undefined ? false : deleted
 	}
       }
     case EDIT_POST:
@@ -47,13 +56,10 @@ function posts (state = initialPostState, action) {
 	...state,
         [id]: {
 	  ...state[id],
-          timestamp,
 	  title,
 	  body,
 	  author,
 	  category,
-	  voteScore,
-	  deleted
 	}
       }
     case DEL_POST:
@@ -64,24 +70,29 @@ function posts (state = initialPostState, action) {
           deleted: true
 	}
       }
+    case INC_POST:
+      return {
+	...state,
+        [id]: {
+	  ...state[id],
+          voteScore: state[id]['voteScore'] + 1
+	}
+      }
+    case DEC_POST:
+      return {
+	...state,
+        [id]: {
+	  ...state[id],
+          voteScore: state[id]['voteScore'] - 1
+	}
+      }
     default:
       return state
   }
 }
 
-
-const initialCommentState = { }
-//  {  id: null,
-//    parentId: null,
-//    timestamp: null,
-//    body: null,
-//    author: null,
-//    voteScore: 0,
-//    deleted: false,
-//    parentDeleted: false }
-
-function comments (state = initialCommentState, action) {
-  const { id, parentId, timestamp, body, author, voteScore, deleted, parentDeleted } = action
+function comments (state = {}, action) {
+  const { id, parentId, body, author, timestamp, voteScore, deleted, parentDeleted } = action
 
   switch (action.type) {
     case ADD_COMMENT:
@@ -90,12 +101,12 @@ function comments (state = initialCommentState, action) {
         [id]: {
 	  ...state[id],
           parentId,
-	  timestamp,
+	  timestamp: timestamp === undefined ? Date.now() : timestamp,
 	  body,
 	  author,
-	  voteScore,
-	  deleted,
-	  parentDeleted
+	  voteScore: voteScore === undefined ? 1 : voteScore,
+	  deleted: deleted === undefined ? false : deleted,
+	  parentDeleted: parentDeleted === undefined ? false : parentDeleted
 	}
       }
     case EDIT_COMMENT:
@@ -103,13 +114,9 @@ function comments (state = initialCommentState, action) {
 	...state,
         [id]: {
 	  ...state[id],
-          parentId,
-	  timestamp,
 	  body,
-	  author,
-	  voteScore,
-	  deleted,
-	  parentDeleted
+	  timestamp,
+	  author
 	}
       }
     case DEL_COMMENT:
@@ -120,42 +127,37 @@ function comments (state = initialCommentState, action) {
           deleted: true
 	}
       }
-    default:
-      return state
-  }
-}
-
-
-const initialVoteScore = 0
-
-function voteScore (state = initialVoteScore, action) {
-  const { id } = action
-
-  switch (action.type) {
-    case INC_VOTE_SCORE:
+    case DEL_COMMENT_PARENT:
       return {
 	...state,
         [id]: {
 	  ...state[id],
-          voteScore: state[id][voteScore] + 1
+	  parentDeleted: true
 	}
       }
-    case DEC_VOTE_SCORE:
+    case INC_COMMENT:
       return {
-	...state,
+        ...state,
         [id]: {
-	  ...state[id],
-          voteScore: state[id][voteScore] - 1
-	}
+          ...state[id],
+          voteScore: state[id]['voteScore'] + 1
+        }
+      }
+    case DEC_COMMENT:
+      return {
+        ...state,
+        [id]: {
+          ...state[id],
+          voteScore: state[id]['voteScore'] - 1
+        }
       }
     default:
       return state
   }
 }
-
 
 export default combineReducers({
+  categories,
   posts,
   comments,
-  voteScore
 })

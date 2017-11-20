@@ -1,98 +1,73 @@
 import React, { Component } from 'react'
 import logo from '../icons/logo.svg'
+import bgImage from '../icons/books.jpg'
 import './App.css'
-import * as PostsAPI from '../utils/PostsAPI'
+import { Link, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { addPost, addComment } from '../actions'
-import CategoryIcon from 'react-icons/lib/fa/tag'
+import * as PostsAPI from '../utils/PostsAPI'
+import { addCategory, addPost, addComment } from '../actions'
+import Posts from './Posts'
+import EditPost from './EditPost'
+import Post from './Post'
+import { Image, Container, Header } from 'semantic-ui-react'
 
 
 class App extends Component {
-  state = {
-    categories: [],
-  }
 
   componentDidMount() {
     PostsAPI.categories().then( (categories) => {
-      this.setState({ categories })
+      categories.forEach( (category) => {
+	this.props.createCategory(category)
+      })
     })
 
     PostsAPI.posts().then( (posts) => {
       posts.forEach( (post) => {
 	this.props.createPost(post)
 	PostsAPI.comments(post.id).then( (comments) => {
-	  comments.forEach( (comment) => (
+	  comments.forEach( (comment) => {
 	    this.props.createComment(comment)
-	  ))
+	  })
 	})
       })
     })
-
   }
 
   render() {
-    const { categories } = this.state
-    console.log('Props', this.props.posts)
-    console.log('State', this.state)
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Readable</h2>
-	  <div className='categories'>
-	  <h3>Categories</h3>
-	  <p>
-	    <ul>
-	    { categories.map( (category) => (
-	      <li key={category.name}><CategoryIcon size={15}/>{category.name}</li>
-            ))}
-	    </ul>
-	  </p>
-	  </div>
-        </div>
-	<div className="posts">
-	<h2>POSTS</h2>
-	{ 
-	  this.props.posts.map( (post) => (
-	    <div key={post.id} className="post">
-	     <h3>{post.title}</h3> 
-	     { post.voteScore }
-	    </div> )
-	  )
-        }
+      <div>
+        <Container className="app-header" style={{backgroundImage: `url(${bgImage})`}}>
+	  <Link to="/">
+            <Header as='h1' icon textAlign='center' title="return to main page">
+              <Image src={logo} className="app-logo" alt="logo" />
+              <Header.Content>Readable</Header.Content>
+	      <Header sub>a udacity project</Header>
+	    </Header>
+	  </Link>
+        </Container>
+
+        <Switch>
+          <Route exact path="/" component={Posts} />
+
+	  <Route exact path="/:category" component={Posts} />
+	  <Route exact path="/:category/:post_id" component={Post} />
+
+          <Route path="/post/new/:category" component={EditPost} />
+	  <Route path="/post/edit/:post_id" component={EditPost} />
+        </Switch>
       </div>
-      </div>
-    );
+    )
   }
+
 }
 
-function mapStateToProps ({ posts, comments}) {
-  return {
-    posts: Object.keys(posts).map( (post_id) => (
-      { ...posts[post_id], 
-	id: post_id,
-        comments: Object.keys(comments)
-	  .map( (comment_id) => (
-	    {
-	      ...comments[comment_id],
-	      id: comment_id
-	    }
-	  ))
-          .filter( (comment) => {
-	     return comment['parentId'] === post_id
-          })
-      }
-    )),
-  }
-}
 
 function mapDispatchToProps (dispatch) {
   return {
+    createCategory: (data) => dispatch(addCategory(data)),
     createPost: (data) => dispatch(addPost(data)),
     createComment: (data) => dispatch(addComment(data))
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps)(App);
+export default connect(null, mapDispatchToProps, null, { pure: false })(App)
