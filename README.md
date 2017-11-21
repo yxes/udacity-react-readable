@@ -19,7 +19,7 @@ then installation is as simple as:
 
 ### API Access
 
-API commands are housed [PostsAPI.js](src/utils/PostsAPI.js)
+API commands are housed in [PostsAPI.js](src/utils/PostsAPI.js)
 
 ### Redux
 
@@ -29,7 +29,7 @@ API commands are housed [PostsAPI.js](src/utils/PostsAPI.js)
 ### Code Reuse
 
 Occasionally there arose issues where the same function would be needed in
-multiple component libraries. I opted to house these in [utils](src/components/utils)
+multiple component libraries. I opted to house these in [components/utils](src/components/utils)
 as I'm afraid I don't know what is cononical in these cases.
 
 ### URL Mapping
