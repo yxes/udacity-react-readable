@@ -1,3 +1,8 @@
+/*
+ * App.js - loads the header for all pages
+ *        - populates our props from the API
+ */
+
 import React, { Component } from 'react'
 import logo from '../icons/logo.svg'
 import bgImage from '../icons/books.jpg'
@@ -6,10 +11,10 @@ import { Link, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as PostsAPI from '../utils/PostsAPI'
 import { addCategory, addPost, addComment } from '../actions'
+import { Image, Container, Header } from 'semantic-ui-react'
 import Posts from './Posts'
 import EditPost from './EditPost'
 import Post from './Post'
-import { Image, Container, Header } from 'semantic-ui-react'
 
 
 class App extends Component {

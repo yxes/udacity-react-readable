@@ -1,14 +1,25 @@
+/*
+ * PostItems.js - list of posts
+ *              - thumbs up / down
+ *              - delete post
+ *              - link to edit screen
+ */
+
 import React, { Component } from 'react'
-import './App.css'
 import { Link } from 'react-router-dom'
 import * as PostsAPI from '../utils/PostsAPI'
 import { connect } from 'react-redux'
 import { incPost, decPost, delPost, delCommentParent } from '../actions'
 import { Grid, Icon, Header } from 'semantic-ui-react'
+
 import formatTimestamp from './utils/formatTimestamp'
+import PropTypes from 'prop-types'
 
 
 class PostItems extends Component {
+  static propTypes = {
+    posts: PropTypes.array.isRequired
+  }
 
   likePost = (e) => { 
     const id = e.target.id

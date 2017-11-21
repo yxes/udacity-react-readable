@@ -1,5 +1,9 @@
+/*
+ * Comments.js - display list of comments for a given post
+ *             - call comment form at the end
+ */
+
 import React, { Component } from 'react'
-import './App.css'
 import { connect } from 'react-redux'
 import { delComment, delCommentParent, incComment, decComment } from '../actions'
 import { Comment, Divider, Header, Icon } from 'semantic-ui-react'
@@ -7,9 +11,14 @@ import userImage from '../icons/user.svg'
 import * as PostsAPI from '../utils/PostsAPI'
 import CommentForm from './CommentForm'
 import formatTimestamp from './utils/formatTimestamp'
+import PropTypes from 'prop-types'
 
 
 class Comments extends Component {
+  static propTypes = {
+    comments: PropTypes.array.isRequired,
+    post_id: PropTypes.string.isRequired
+  }
 
   state = {
     comment: {

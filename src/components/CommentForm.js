@@ -1,3 +1,7 @@
+/*
+ * CommentForm.js - edit / create new comment
+ */
+
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { addComment, editComment } from '../actions'
@@ -7,7 +11,6 @@ import PropTypes from 'prop-types'
 
 
 class CommentForm extends Component {
-
   static propTypes = {
     post_id: PropTypes.string.isRequired,
     comment: PropTypes.object

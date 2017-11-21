@@ -1,16 +1,25 @@
+/*
+ * EditPost.js - Form to create or change a post
+ */
+
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { addPost, editPost } from '../actions'
 import { Container, Divider, Form, Header, Icon } from 'semantic-ui-react'
 import mapStateToProps from './utils/combinePostsComments.js'
-//import { uniqueId } from 'underscore'
 import * as PostsAPI from '../utils/PostsAPI'
+import PropTypes from 'prop-types'
 
 
 class NewPost extends Component {
+  static propTypes = {
+    categories: PropTypes.array.isRequired,
+    posts: PropTypes.array.isRequired
+  }
+
   state = {
-    redirectToPost: false,
+    redirectToPost: false, // true once we submit the form
     post: {
       id: undefined,
       title: '',
@@ -91,6 +100,7 @@ class NewPost extends Component {
 
     const {id, title, author, category, body} = this.state.post
 
+    // keep our link history in tack while performing a redirect after submission
     if (this.state.redirectToPost) {
       return (
 	<Redirect to={`/${category}/${id}`} />
@@ -106,14 +116,18 @@ class NewPost extends Component {
 	  </Header>
 	  <Form onSubmit={this.addPost}>
 	    <Form.Group widths='equal'>
+
 	      <Form.Input label="title" name='title' value={title} 
 	        placeholder="Title of Post" onChange={this.updatePost} />
+
 	      <Form.Input label="author" name='author' value={author}
 	        disabled={ this.state.post.id ? true : false }
 	        placeholder="Your Name" onChange={this.updatePost} />
+
 	      <Form.Select label="category" name='category' value={category}
 	        disabled={ this.state.post.id ? true : false }
 	        options={options_category} placeholder="Category" onChange={this.updatePost}/>
+		
 	    </Form.Group>
 	    <Form.TextArea label='post' rows='5' name='body' value={body}
 	      onChange={this.updatePost} />

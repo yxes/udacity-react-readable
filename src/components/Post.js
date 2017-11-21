@@ -1,5 +1,8 @@
+/*
+ * Post.js - details of a single post
+ */
+
 import React, { Component } from 'react'
-import './App.css'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import {  delPost, incPost, decPost }  from '../actions'
@@ -8,20 +11,13 @@ import mapStateToProps from './utils/combinePostsComments'
 import formatTimestamp from './utils/formatTimestamp'
 import * as PostsAPI from '../utils/PostsAPI'
 import Comments from './Comments'
-
+import PropTypes from 'prop-types'
 
 class Post extends Component {
-
-  /*
-  formatTimestamp(timestamp) {
-    if (timestamp !== undefined) {
-      var d = new Date(timestamp)
-      return d.toUTCString().split(' ').splice(1,4).join(' ')
-    }
-
-    return ''
+  static propTypes = {
+    posts: PropTypes.array.isRequired
   }
-*/
+
   deletePost = (e) => { 
     const id = this.props.match.params.post_id
     this.props.posts

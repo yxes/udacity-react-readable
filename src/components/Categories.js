@@ -1,10 +1,20 @@
+/*
+ * Categories.js - display a given list of categories and a possible
+ *                 selected category
+ */
+
 import React, { Component } from 'react'
-import './App.css'
 import { Link } from 'react-router-dom'
 import { List, Header } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
 
 
 class Categories extends Component {
+
+  static propTypes = {
+    myCategory: PropTypes.string.isRequired,
+    categories: PropTypes.array.isRequired,
+  }
 
   // unlink selected category (essentially highlighting it)
   renderCategory = (myCategory, category) => {
@@ -30,12 +40,6 @@ class Categories extends Component {
 	  ))}
 	  </List>
 	</Header>
-	<p>
-	  <i>click the rotating 'R' at any time to return to the main page</i>
-	</p>
-	<p>
-	  <i>use the 'date' and 'rank' buttons to sort your posts</i>
-	</p>
       </div>
     )
   }
