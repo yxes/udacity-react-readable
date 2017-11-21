@@ -51,7 +51,7 @@ export const editPost = ({ id, title, body }) =>
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({ title, body })
-  }).then(res => console.log(res) ) //res.json())
+  }).then(res => res.json())
 
 export const delPost = (id) =>
   fetch(`${api}/posts/${id}`, {
