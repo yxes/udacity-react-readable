@@ -1,4 +1,5 @@
 # Readable - udacity-react-readable
+
 _Second project of the Udacity React Nanodegree_
 
 ## Mini-Blog
@@ -11,6 +12,8 @@ To start you will need to have a running copy of
 [reactnd-project-readable-starter](https://github.com/udacity/reactnd-project-readable-starter)
 to run alongside this so it has something to connect to.
 
+then installation is as simple as:
+
 - `npm install`
 - `npm start`
 
@@ -20,8 +23,8 @@ API commands are housed [PostsAPI.js](src/utils/PostsAPI.js)
 
 ### Redux
 
-[Actions](src/actions/index.js)
-[Reducers](src/reducers/index.js) 
+- [Actions](src/actions/index.js)
+- [Reducers](src/reducers/index.js) 
 
 ### Code Reuse
 
@@ -92,4 +95,5 @@ Loads:
 ## AUTHOR
 
 Originally initialized using [create-react-app](https://github.com/facebookincubator/create-react-app)
-functionality supplied by [Steve Wells](https://linkedin.com/in/sdwells)
+
+functionality humbly supplied by [Steve Wells](https://linkedin.com/in/sdwells)
