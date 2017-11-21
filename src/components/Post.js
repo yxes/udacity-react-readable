@@ -5,7 +5,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import {  delPost, incPost, decPost }  from '../actions'
+import { delPost, incPost, decPost, delCommentParent }  from '../actions'
 import { Container, Divider, Grid, Header, Icon } from 'semantic-ui-react'
 import mapStateToProps from './utils/combinePostsComments'
 import formatTimestamp from './utils/formatTimestamp'
@@ -24,8 +24,7 @@ class Post extends Component {
       .filter( (post) => post.id === id )[0]
       .comments.forEach( (comment) => this.props.removeCommentParent(comment) )
 
-    this.props.removePost({ id })
-    PostsAPI.delPost(id)
+    PostsAPI.delPost(id).then( (ret) => this.props.removePost({ id }) )
   } 
 
   likePost = (e) => { 
@@ -111,6 +110,7 @@ function mapDispatchToProps (dispatch) {
   return {
              removePost: (data) => dispatch(delPost(data)),
 	       likePost: (data) => dispatch(incPost(data)),
+    removeCommentParent: (data) => dispatch(delCommentParent(data)),
 	    dislikePost: (data) => dispatch(decPost(data)),
   }
 }

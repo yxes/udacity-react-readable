@@ -12,7 +12,7 @@ To start you will need to have a running copy of
 [reactnd-project-readable-starter](https://github.com/udacity/reactnd-project-readable-starter)
 to run alongside this so it has something to connect to.
 
-then installation is as simple as:
+Then the installation is as simple as:
 
 - `npm install`
 - `npm start`
@@ -34,7 +34,7 @@ as I'm afraid I don't know what is cononical in these cases.
 
 ### URL Mapping
 
-_all references are to components under the /src/components directory_
+_All references are to components under the /src/components directory_
 
 `/`
 
@@ -96,4 +96,4 @@ Loads:
 
 Originally initialized using [create-react-app](https://github.com/facebookincubator/create-react-app)
 
-functionality humbly supplied by [Steve Wells](https://linkedin.com/in/sdwells)
+Functionality humbly supplied by [Steve Wells](https://linkedin.com/in/sdwells)
