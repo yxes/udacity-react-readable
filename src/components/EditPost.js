@@ -98,7 +98,7 @@ class NewPost extends Component {
 
   // called in the event that we are editing a post (not creating a new one)
   initializePost(post) {
-    if (post.id) {
+    if (post !== undefined && post.id) {
       this.setState({ 
 	post: {
 	  ...this.state.post,
