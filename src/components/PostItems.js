@@ -7,9 +7,8 @@
 
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import * as PostsAPI from '../utils/PostsAPI'
 import { connect } from 'react-redux'
-import { incPost, decPost, delPost, delCommentParent } from '../actions'
+import { incPost, decPost, delPost } from '../actions'
 import { Grid, Icon, Header } from 'semantic-ui-react'
 
 import formatTimestamp from './utils/formatTimestamp'
@@ -19,36 +18,6 @@ import PropTypes from 'prop-types'
 class PostItems extends Component {
   static propTypes = {
     posts: PropTypes.array.isRequired
-  }
-
-  likePost = (e) => { 
-    const id = e.target.id
-    this.props.likePost({ id })
-    PostsAPI.votePost(id, 'upVote')
-  }
-
-  dislikePost = (e) => { 
-    const id = e.target.id
-    this.props.dislikePost({ id }) 
-    PostsAPI.votePost(id, 'downVote')
-  }
-
-  dumpPost = (e) => {
-    e.preventDefault()
-
-    const post_id = e.target.id
-
-    this.props.posts
-      .filter( (post) => post.id === post_id )[0]
-      .comments.forEach( (comment) => {
-	PostsAPI.delComment(comment.id).then( (ret) => {
-	  this.props.removeCommentParent(comment)
-	})
-      })
-
-    PostsAPI.delPost(e.target.id).then( (ret) => {
-      this.props.removePost({ id: post_id })
-    })
   }
 
   render() {
@@ -67,12 +36,12 @@ class PostItems extends Component {
 		   name="thumbs up" 
 		   id={post.id}
 		   style={{ cursor: 'pointer' }}
-		   onClick={this.likePost}/> &nbsp;
+		   onClick={(e) => this.props.likePost(e.target.id)} /> &nbsp;
 		 <Icon
 		   name="thumbs down"
 		   id={post.id}
 		   style={{ cursor: 'pointer' }}
-		   onClick={this.dislikePost}/>
+		   onClick={(e) => this.props.dislikePost(e.target.id)}/>
 	       </Grid.Column>
 	     </Grid>
 	     <Header as='h3' textAlign='center'>
@@ -89,7 +58,7 @@ class PostItems extends Component {
 		   <Link to={`/post/edit/${post.id}`} name={post.id}>
 		     <Icon name="edit" />edit&nbsp;&nbsp;
 		   </Link>
-		   <Link to='' id={post.id} onClick={this.dumpPost}>
+		   <Link to='' id={post.id} onClick={() => this.props.removePost(post)}>
 		     <Icon name="delete" />delete
 		   </Link>
 		 </p>
@@ -113,10 +82,9 @@ class PostItems extends Component {
 
 function mapDispatchToProps (dispatch) {
   return {
-               likePost: (data) => dispatch(incPost(data)),
-            dislikePost: (data) => dispatch(decPost(data)),
-    removeCommentParent: (data) => dispatch(delCommentParent(data)),
-             removePost: (data) => dispatch(delPost(data))
+       likePost: (data) => dispatch(incPost(data)),
+    dislikePost: (data) => dispatch(decPost(data)),
+     removePost: (data) => dispatch(delPost(data))
   }
 }
 

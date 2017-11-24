@@ -5,10 +5,9 @@
 
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { delComment, delCommentParent, incComment, decComment } from '../actions'
+import { delComment, incComment, decComment } from '../actions'
 import { Comment, Divider, Header, Icon } from 'semantic-ui-react'
 import userImage from '../icons/user.svg'
-import * as PostsAPI from '../utils/PostsAPI'
 import CommentForm from './CommentForm'
 import formatTimestamp from './utils/formatTimestamp'
 import PropTypes from 'prop-types'
@@ -47,25 +46,6 @@ class Comments extends Component {
     this.setState({ comment })
   }
 
-  // delete comment
-  dumpComment = (e) => {
-    const id = e.target.name
-    this.props.removeComment({ id })
-    PostsAPI.delComment(id)
-  }
-
-  likeComment = (e) => {
-    const id = e.target.name
-    this.props.likeComment({ id })
-    PostsAPI.voteComment( id, 'upVote' )
-  }
-
-  dislikeComment = (e) => {
-    const id = e.target.name
-    this.props.dislikeComment({ id })
-    PostsAPI.voteComment( id, 'downVote' )
-  }
-
   render() {
 
     const { comments } = this.props
@@ -95,15 +75,16 @@ class Comments extends Component {
 		    <Comment.Action name={comment.id} onClick={this.editComment}>
 		      <Icon name="edit" />edit
 		    </Comment.Action>
-		    <Comment.Action name={comment.id} onClick={this.dumpComment}>
+		    <Comment.Action
+		      onClick={() => this.props.removeComment(comment.id)}>
 		      <Icon name="delete" />delete
 		    </Comment.Action>
 		    &nbsp;&nbsp;&nbsp;&nbsp;
 		    &nbsp;&nbsp;&nbsp;&nbsp;
-		    <Comment.Action name={comment.id} onClick={this.likeComment}>
+		    <Comment.Action name={comment.id} onClick={() => this.props.likeComment(comment.id)}>
 		      <Icon name="thumbs up" />like
 		    </Comment.Action>
-		    <Comment.Action name={comment.id} onClick={this.dislikeComment}>
+		    <Comment.Action name={comment.id} onClick={() => this.props.dislikeComment(comment.id)}>
 		      <Icon name="thumbs down" />dislike
 		    </Comment.Action>
 		  </Comment.Actions>
@@ -123,10 +104,9 @@ class Comments extends Component {
 
 function mapDispatchToProps (dispatch) {
   return {
-          removeComment: (data) => dispatch(delComment(data)),
-    removeCommentParent: (data) => dispatch(delCommentParent(data)),
-	    likeComment: (data) => dispatch(incComment(data)),
-	 dislikeComment: (data) => dispatch(decComment(data))
+    removeComment: (data) => dispatch(delComment(data)),
+      likeComment: (data) => dispatch(incComment(data)),
+   dislikeComment: (data) => dispatch(decComment(data))
   }
 }
 

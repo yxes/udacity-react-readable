@@ -42,7 +42,6 @@ class Posts extends Component {
     const { sort } = this.state
 
     return this.props.posts
-      .filter( (post) => !post.deleted )
       .sort( (a, b) => sort.order === "ascending" ? 
 	      a[sort.key] - b[sort.key] : b[sort.key] - a[sort.key] )
   }

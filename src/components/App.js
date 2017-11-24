@@ -9,8 +9,7 @@ import bgImage from '../icons/books.jpg'
 import './App.css'
 import { Link, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
-import * as PostsAPI from '../utils/PostsAPI'
-import { addCategory, addPost, addComment } from '../actions'
+import { initCategories, initPosts } from '../actions'
 import { Image, Container, Header } from 'semantic-ui-react'
 import Posts from './Posts'
 import EditPost from './EditPost'
@@ -20,22 +19,8 @@ import Post from './Post'
 class App extends Component {
 
   componentDidMount() {
-    PostsAPI.categories().then( (categories) => {
-      categories.forEach( (category) => {
-	this.props.createCategory(category)
-      })
-    })
-
-    PostsAPI.posts().then( (posts) => {
-      posts.forEach( (post) => {
-	this.props.createPost(post)
-	PostsAPI.comments(post.id).then( (comments) => {
-	  comments.forEach( (comment) => {
-	    this.props.createComment(comment)
-	  })
-	})
-      })
-    })
+    this.props.initializeCategories()
+    this.props.initializePosts()
   }
 
   render() {
@@ -69,9 +54,8 @@ class App extends Component {
 
 function mapDispatchToProps (dispatch) {
   return {
-    createCategory: (data) => dispatch(addCategory(data)),
-    createPost: (data) => dispatch(addPost(data)),
-    createComment: (data) => dispatch(addComment(data))
+    initializeCategories: () => dispatch(initCategories()),
+         initializePosts: () => dispatch(initPosts()),
   }
 }
 

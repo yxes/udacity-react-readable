@@ -5,40 +5,16 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { delPost, incPost, decPost, delCommentParent }  from '../actions'
+import { delPost, incPost, decPost }  from '../actions'
 import { Container, Divider, Grid, Header, Icon } from 'semantic-ui-react'
 import mapStateToProps from './utils/combinePostsComments'
 import formatTimestamp from './utils/formatTimestamp'
-import * as PostsAPI from '../utils/PostsAPI'
 import Comments from './Comments'
 import PropTypes from 'prop-types'
 
 class Post extends Component {
   static propTypes = {
     posts: PropTypes.array.isRequired
-  }
-
-  deletePost = (e) => { 
-    const id = this.props.match.params.post_id
-    this.props.posts
-      .filter( (post) => post.id === id )[0]
-      .comments.forEach( (comment) => this.props.removeCommentParent(comment) )
-
-    PostsAPI.delPost(id).then( (ret) => this.props.removePost({ id }) )
-  } 
-
-  likePost = (e) => { 
-    e.preventDefault(); 
-    const id = this.props.match.params.post_id
-    this.props.likePost({ id })
-    PostsAPI.votePost(id, 'upVote')
-  }
-
-  dislikePost = (e) => {
-    e.preventDefault();
-    const id = this.props.match.params.post_id
-    this.props.dislikePost({ id }) 
-    PostsAPI.votePost(id, 'downVote')
   }
 
   initialPost = {
@@ -55,7 +31,7 @@ class Post extends Component {
 
     // extract our post from props or initialize with a blank post
     const post = this.props.posts.filter( 
-      (post) => !post.deleted && post.id === this.props.match.params.post_id
+      (post) => post.id === this.props.match.params.post_id
     )[0] || this.initialPost
 
     return (
@@ -68,17 +44,18 @@ class Post extends Component {
 	    <Link to={ "/post/edit/" + post.id }>
 	      <Icon name="edit" size="large" title="edit post" bordered circular/>
 	    </Link>
-	    <Link to="/" onClick={this.deletePost}>
-	      <Icon name="delete" size="large" title="delete post" bordered circular />
-	    </Link>
+	    <Link to="/">
+	      <Icon name="delete" size="large" title="delete post" bordered circular 
+		onClick={() => this.props.removePost(post)} />
+            </Link>
 	  </Grid.Column>
 	  <Grid.Column width={8} textAlign="right">
-	    <Link to="/" onClick={this.likePost}>
-	      <Icon name="thumbs up" size="large" title="like" bordered circular/>
-	    </Link>
-	    <Link to="/" onClick={this.dislikePost}>
-	      <Icon name="thumbs down" size="large" title="dislike" bordered circular/>
-	    </Link>
+	    <Icon name="thumbs up" size="large" title="like" bordered circular
+	      onClick={() => this.props.likePost(post.id)} color="blue"
+	      style={{ cursor: 'pointer' }}/>
+	    <Icon name="thumbs down" size="large" title="dislike" bordered circular
+	      onClick={() => this.props.dislikePost(post.id)} color="blue"
+	      style={{ cursor: 'pointer' }}/>
 	  </Grid.Column>
 	</Grid>
         <Divider />
@@ -108,10 +85,9 @@ class Post extends Component {
 
 function mapDispatchToProps (dispatch) {
   return {
-             removePost: (data) => dispatch(delPost(data)),
-	       likePost: (data) => dispatch(incPost(data)),
-    removeCommentParent: (data) => dispatch(delCommentParent(data)),
-	    dislikePost: (data) => dispatch(decPost(data)),
+     removePost: (data) => dispatch(delPost(data)),
+       likePost: (data) => dispatch(incPost(data)),
+    dislikePost: (data) => dispatch(decPost(data)),
   }
 }
 
