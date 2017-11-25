@@ -11,28 +11,45 @@ import mapStateToProps from './utils/combinePostsComments'
 import formatTimestamp from './utils/formatTimestamp'
 import Comments from './Comments'
 import PropTypes from 'prop-types'
+import * as PostsAPI from '../utils/PostsAPI'
+import PostNotFound from './PostNotFound'
 
 class Post extends Component {
   static propTypes = {
     posts: PropTypes.array.isRequired
   }
 
-  initialPost = {
-    id: '',
-    title: '',
-    author: '',
-    timestamp: '',
-    voteScore: 1,
-    body: '',
-    comments: []
+  state = { post: { id: undefined } }
+
+  // ensure we change id from undefined to '' in case PostNotFound
+  initializePost = (post) => 
+    this.setState({
+      post: {
+	...this.state.post,
+        id: '',
+	post
+      }
+    })
+
+  componentDidMount() {
+    const id = this.props.match.params.post_id
+
+    if (! this.props.posts.length) {
+      PostsAPI.fetchPost(id).then( post => this.initializePost(post) )
+    }else{
+      const post = this.props.posts.filter(
+	post => post.id === id)[0]
+      this.initializePost(post)
+    }
   }
 
   render() {
 
-    // extract our post from props or initialize with a blank post
-    const post = this.props.posts.filter( 
-      (post) => post.id === this.props.match.params.post_id
-    )[0] || this.initialPost
+    const { post } = this.state
+
+    if (post === undefined || ! post.id) {
+      return ( <PostNotFound post_id={post.id} /> )
+    }
 
     return (
       <Container text>

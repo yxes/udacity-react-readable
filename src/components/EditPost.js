@@ -6,40 +6,12 @@ import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { addPost, editPost } from '../actions'
-import { Button, Container, Dimmer, Divider, Form, Header, Icon, Loader, Message, Segment } from 'semantic-ui-react'
+import { Button, Container, Divider, Form, Header, Icon, Message } from 'semantic-ui-react'
 import mapStateToProps from './utils/combinePostsComments.js'
 import PropTypes from 'prop-types'
 import * as PostsAPI from '../utils/PostsAPI'
+import PostNotFound from './PostNotFound'
 
-
-class PostNotFound extends Component {
-  //   - post_id = undefined --> we haven't loaded a post yet
-  //   - post_id = ''        --> the post doesn't exist
-  render () {
-    return (
-      <Container text>
-	<br />
-	<Segment raised textAlign='center'>
-	{ (this.props.post_id === undefined) ?
-	    <span>
-	      <br /><br />
-	      <Dimmer inverted active>
-		<Loader inverted>Loading</Loader>
-	      </Dimmer>
-	    </span> 
-	    :
-	    <span>
-	      This Post Does Not Exist<br />
-	      <Link to="/">
-		<Button positive>Return to Posts that DO exist</Button>
-	      </Link>
-	    </span>
-	}
-	</Segment>
-      </Container>
-    )
-  }
-}
 
 class NewPost extends Component {
   static propTypes = {

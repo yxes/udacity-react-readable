@@ -2,95 +2,44 @@
 
 _Second project of the Udacity React Nanodegree_
 
-## Mini-Blog
-
-Uses React, Redux and Semantic-UI to create a tiny blog
+This is an example of using React-Redux to create a micro-blog, complete with comments and
+ranking.
 
 ## INSTALLATION
 
-To start you will need to have a running copy of
-[reactnd-project-readable-starter](https://github.com/udacity/reactnd-project-readable-starter)
-to run alongside this so it has something to connect to.
+### API
 
-Then the installation is as simple as:
+To start you will need to have a running copy of [reactnd-project-readable-starter](https://github.com/udacity/reactnd-project-readable-starter) to run alongside this so it has something to connect to.
+
+Once downloaded, you will need to follow the installation instructions, mainly:
+
+* `cd api-server`
+* `npm install`
+* `node server`
+
+### READABLE
+
+In another terminal window you can then run *Readable* using:
 
 - `npm install`
 - `npm start`
 
-### API Access
+## USAGE
 
-API commands are housed in [PostsAPI.js](src/utils/PostsAPI.js)
+Once installed, *Readable* will automatically fire up in your browser.
 
-### Redux
+## TODO
 
-- [Actions](src/actions/index.js)
-- [Reducers](src/reducers/index.js) 
+There is no mechanism for session tracking. Users can not log in and the honor sytem is in full force when
+adding your name to comments or posts.
 
-### Code Reuse
+## CONTRIBUTING
 
-Occasionally there arose issues where the same function would be needed in
-multiple component libraries. I opted to house these in [components/utils](src/components/utils)
-as I'm afraid I don't know what is cononical in these cases.
+You are welcome to fork this repository, however contributions will not be accepted as it is part of a class.
 
-### URL Mapping
+## LICENSE
 
-_All references are to components under the /src/components directory_
-
-`/`
-
-List of all posts and categories
-
-Loads:
-```
-  App - main application
-    Posts - all posts page
-      Categories - list of categories
-      PostItems - list of posts
-```
-
-`/:category`
-
-Limit posts to a specific category
-
-Loads:
-```
-  App - main application
-    Posts - specific to given category
-      Categories - list of categories
-      PostItems - list of posts
-```
-
-`/:category/:post_id`
-
-Details of a specific post
-
-Loads:
-```
-  App - main application
-    Post - post details
-      Comments - display comments
-        CommentForm - edit / create new comment
-```
-
-`/post/new/:category`
-
-Select category from dropdown by default
-
-Loads:
-```
-  App - main application
-    EditPost - Add New Post
-```
-
-`/post/edit/:post_id`
-
-Edit a given post
-
-Loads:
-```
-  App - main application
-    EditPost - Edit Post by post_id
-```
+The contents of this repository are covered under the [MIT License](https://github.com/udacity/ud777-writing-readmes/blob/master/LICENSE).
 
 ## AUTHOR
 
