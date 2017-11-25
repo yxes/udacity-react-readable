@@ -19,23 +19,35 @@ class Post extends Component {
     posts: PropTypes.array.isRequired
   }
 
-  state = { post: { id: undefined } }
+  state = { post: { id: undefined, comments: [] } }
 
-  // ensure we change id from undefined to '' in case PostNotFound
-  initializePost = (post) => 
+  initializePost = (post) => {
     this.setState({
       post: {
 	...this.state.post,
-        id: '',
-	post
+        ...post
       }
     })
+  }
 
   componentDidMount() {
     const id = this.props.match.params.post_id
 
+    // move out of the loading state
+    this.setState({ post: { ...this.state.post, id: '' } })
+
     if (! this.props.posts.length) {
-      PostsAPI.fetchPost(id).then( post => this.initializePost(post) )
+      // since we aren't updating Redux there's no reason
+      //  to house this in actions
+      PostsAPI.fetchPost(id).then( 
+	post => 
+	  PostsAPI.comments(id).then(
+	    comments => {
+	      post.comments = comments
+	      this.initializePost(post)
+	    }
+	  )
+      )
     }else{
       const post = this.props.posts.filter(
 	post => post.id === id)[0]
@@ -44,7 +56,6 @@ class Post extends Component {
   }
 
   render() {
-
     const { post } = this.state
 
     if (post === undefined || ! post.id) {
