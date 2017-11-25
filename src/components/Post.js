@@ -25,6 +25,7 @@ class Post extends Component {
     this.setState({
       post: {
 	...this.state.post,
+        id: '',
         ...post
       }
     })
@@ -32,9 +33,6 @@ class Post extends Component {
 
   componentDidMount() {
     const id = this.props.match.params.post_id
-
-    // move out of the loading state
-    this.setState({ post: { ...this.state.post, id: '' } })
 
     if (! this.props.posts.length) {
       // since we aren't updating Redux there's no reason
@@ -58,7 +56,7 @@ class Post extends Component {
   render() {
     const { post } = this.state
 
-    if (post === undefined || ! post.id) {
+    if (!post.id) {
       return ( <PostNotFound post_id={post.id} /> )
     }
 
