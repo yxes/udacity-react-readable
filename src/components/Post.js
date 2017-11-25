@@ -5,13 +5,12 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { delPost, incPost, decPost }  from '../actions'
+import { initPosts, getPost, delPost, incPost, decPost }  from '../actions'
 import { Container, Divider, Grid, Header, Icon } from 'semantic-ui-react'
 import mapStateToProps from './utils/combinePostsComments'
 import formatTimestamp from './utils/formatTimestamp'
 import Comments from './Comments'
 import PropTypes from 'prop-types'
-import * as PostsAPI from '../utils/PostsAPI'
 import PostNotFound from './PostNotFound'
 
 class Post extends Component {
@@ -19,45 +18,40 @@ class Post extends Component {
     posts: PropTypes.array.isRequired
   }
 
-  state = { post: { id: undefined, comments: [] } }
-
-  initializePost = (post) => {
-    this.setState({
-      post: {
-	...this.state.post,
-        id: '',
-        ...post
-      }
-    })
-  }
+  state = { post_exists: undefined }
 
   componentDidMount() {
     const id = this.props.match.params.post_id
 
+    // normally this is loaded and kept in sync however
+    //  if the user reloads the page it may have to reinitialize
+    //  in this case we just fetch the one post and see if it exists
+    //  while the initialization takes place in the background
     if (! this.props.posts.length) {
-      // since we aren't updating Redux there's no reason
-      //  to house this in actions
-      PostsAPI.fetchPost(id).then( 
-	post => 
-	  PostsAPI.comments(id).then(
-	    comments => {
-	      post.comments = comments
-	      this.initializePost(post)
-	    }
-	  )
-      )
+       this.props.fetchPost(id)
+	 .then( post => 
+           this.setState(
+	     { post_exists: post.id ? true : false })
+         )
     }else{
-      const post = this.props.posts.filter(
-	post => post.id === id)[0]
-      this.initializePost(post)
+      this.setState({ post_exists: false }) // default
     }
+
   }
 
   render() {
-    const { post } = this.state
+    const post = this.props.posts !== undefined ?
+      this.props.posts.filter(
+        post => post.id === this.props.match.params.post_id
+      )[0] :
+      undefined
 
-    if (!post.id) {
-      return ( <PostNotFound post_id={post.id} /> )
+    if (post === undefined) {
+      const loading = (
+	this.state.post_exists === undefined || this.state.post_exists)
+        ? true : false
+
+      return ( <PostNotFound loading={ loading } /> )
     }
 
     return (
@@ -111,10 +105,13 @@ class Post extends Component {
 
 function mapDispatchToProps (dispatch) {
   return {
+    initializePosts: () => dispatch(initPosts()),
+
+      fetchPost: (data) => dispatch(getPost(data)),
      removePost: (data) => dispatch(delPost(data)),
        likePost: (data) => dispatch(incPost(data)),
     dislikePost: (data) => dispatch(decPost(data)),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps, null, { pure: false })(Post)
+export default connect(mapStateToProps, mapDispatchToProps)(Post)

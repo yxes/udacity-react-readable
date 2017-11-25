@@ -44,6 +44,10 @@ export const initCategories = () => dispatch => (
     })
 )
 
+export const getPost = (id) => dispatch => {
+  return PostsAPI.fetchPost(id)
+}
+
 export const addPost = (post) => dispatch => {
   post = {
     ...post,
@@ -51,9 +55,8 @@ export const addPost = (post) => dispatch => {
     voteScore: 1 // API defaults to 1
   }
 
-  PostsAPI
-    .newPost(post)
-    .then(() => dispatch(newPost(post)))
+  dispatch(newPost(post))
+  PostsAPI.newPost(post)
 
   return post
 }
@@ -61,7 +64,7 @@ export const addPost = (post) => dispatch => {
 export const modPost = (post) => dispatch => (
   PostsAPI
     .editPost(post)
-    .then(() => dispatch(editPost(post)))
+    .then(() => dispatch(editPost(post)) )
 )
 
 export const delPost = (post) => dispatch => (
@@ -76,11 +79,11 @@ export const delPost = (post) => dispatch => (
     })
 )
 
-export const incPost = ( id ) => dispatch => (
+export const incPost = ( id ) => dispatch => {
   PostsAPI
     .votePost(id, 'upVote')
     .then(() => dispatch(posPost(id)))
-)
+}
 
 export const decPost = ( id ) => dispatch => (
   PostsAPI

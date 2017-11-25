@@ -5,11 +5,10 @@
 import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { addPost, editPost } from '../actions'
+import { addPost, getPost, modPost } from '../actions'
 import { Button, Container, Divider, Form, Header, Icon, Message } from 'semantic-ui-react'
 import mapStateToProps from './utils/combinePostsComments.js'
 import PropTypes from 'prop-types'
-import * as PostsAPI from '../utils/PostsAPI'
 import PostNotFound from './PostNotFound'
 
 
@@ -37,32 +36,26 @@ class NewPost extends Component {
   }
 
   componentDidMount() {
-    const default_category = this.props.match.params.category
+    const { category, post_id } = this.props.match.params
 
-    if (this.props.match.params.post_id) {
-      const id = this.props.match.params.post_id
-
+    if (post_id) {
       if (! this.props.posts.length) { // page was reloaded
-	 // there's no reason to tie this individual request to redux
-	 //  as it's preloaded in 'App' ... it just hasn't happened yet
-         PostsAPI.fetchPost(id).then( (post) => {
-	   this.initializePost(post)
-	 })
-      } else { // cached
-	 const post = this.props.posts.filter( 
-	  (post) => post.id === this.props.match.params.post_id)[0]
-	 
+         this.props.fetchPost(post_id)
+	   .then(post => this.initializePost(post))
+      } else { // no need to bother with api call
+	 const post = this.props.posts
+	   .filter(post => post.id === post_id)[0]
 	 this.initializePost(post)
       }
 
     // when creating a post you can select your category
     // however, if you are coming from a specific category that
     // category is selected by default
-    } else if (default_category !== "Posts") {
+    } else if (category !== "Posts") {
       this.setState({
 	post: {
 	  ...this.state.post,
-	  category: default_category
+	  category
 	}
       })
     }
@@ -85,7 +78,7 @@ class NewPost extends Component {
       this.setState({ 
 	post: { 
 	  ...this.state.post, 
-	  id: '' 
+	  id: '' // indicates the id isn't found
 	}
       })
     }
@@ -120,15 +113,17 @@ class NewPost extends Component {
     // modify or add? 
     if (post.id !== undefined) {
       this.props.modifyPost(post)
+	.then( () => this.setState({ redirectToPost: true }))
     } else {
       post.author = post.author.length ? post.author : 'anonymous'
-      this.setState({ post: this.props.createPost(post) })
+
+      const new_post = this.props.createPost(post)
+      this.setState({ post: new_post, redirectToPost: true })
     }
 
-    this.setState({ redirectToPost: true })
   }
 
-  // in this case error = that the field was left blank
+  // error = the field was empty
   hasError = (field) => {
     return this.state.touched[field] && this.state.post[field].length === 0
   }
@@ -136,7 +131,10 @@ class NewPost extends Component {
   options_category = this.props.categories.map( (category) => {
     return {
       key: category['name'],
-      text: category['name'].charAt(0).toUpperCase() + category['name'].slice(1),
+      text: category['name']
+	.charAt(0)
+	.toUpperCase() + category['name']
+	.slice(1),
       value: category['path']
     }
   })
@@ -146,7 +144,8 @@ class NewPost extends Component {
 
     // Post Not Found Error
     if ( this.props.match.params.post_id && !post.id) {
-      return <PostNotFound post_id={post.id} />
+      const loading = (post.id === undefined) ? true : false
+      return <PostNotFound loading={loading} />
     }
 
     // Submitted Form: keep link history in tact
@@ -205,8 +204,9 @@ class NewPost extends Component {
 
 function mapDispatchToProps (dispatch) {
   return {
+     fetchPost: (data) => dispatch(getPost(data)),
     createPost: (data) => dispatch(addPost(data)),
-    modifyPost: (data) => dispatch(editPost(data))
+    modifyPost: (data) => dispatch(modPost(data))
   }
 }
 

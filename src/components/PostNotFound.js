@@ -1,16 +1,25 @@
+/*
+ * PostNotFound - display loading or does not exist button
+ *
+ * requires 'loading' prop type (boolean)
+ */
+
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { Button, Container, Dimmer, Loader, Segment } from 'semantic-ui-react'
+import PropTypes from 'prop-types'
 
 class PostNotFound extends Component {
-  //   - post_id = undefined --> we haven't loaded a post yet
-  //   - post_id = ''        --> the post doesn't exist
+  static propTypes = {
+    loading: PropTypes.bool.isRequired
+  }
+
   render () {
     return (
       <Container text>
         <br />
         <Segment raised textAlign='center'>
-        { (this.props.post_id === undefined) ?
+        { (this.props.loading) ?
             <span>
               <br /><br />
               <Dimmer inverted active>
